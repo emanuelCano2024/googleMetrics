@@ -57,7 +57,7 @@
                                  <label for="strategy" class="form-label">Strategy</label>
                                  <div class="mb-3">
                                      <select class="form-select w-100" id="strategy" name="strategy">
-                                         <option value="1">Descktop</option>
+                                         <option value="1">Desktop</option>
                                          <option value="2">Mobile</option>
                                      </select>
                                  </div>
