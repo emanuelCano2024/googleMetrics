@@ -7,6 +7,7 @@ use App\Models\Strategy;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Models\MetricHistoryRun;
+use Illuminate\Support\Facades\Log;
 
 class GoogleMetricsController extends Controller
 {
@@ -19,6 +20,7 @@ class GoogleMetricsController extends Controller
     {
         $validated = $request->validate([
             'urlWeb' => 'required|url',
+            'strategy_id' => 'required|integer'
         ], [
             'urlWeb.required' => 'El campo URL es obligatorio.',
             'urlWeb.url' => 'El campo debe contener una URL valida.',
@@ -44,15 +46,16 @@ class GoogleMetricsController extends Controller
 
     private function getMetricas($validated) 
     {
+        ($validated['strategy_id'] == 1)? $strategy= 'desktop' : $strategy= 'mobile';
         try {
             $url = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?'
-            . 'url=https://broobe.com&'
+            . 'url='.$validated['urlWeb'].'&'
             . 'key=AIzaSyDCrPAzhzWxZbJxPYIEURODTvBFVVRNHbY&'
             . 'category=SEO&'
             . 'category=PERFORMANCE&'
             . 'category=BEST_PRACTICES&'
             . 'category=ACCESSIBILITY&'
-            . 'strategy=mobile';
+            . 'strategy='.$strategy;
             $client = new Client(); 
             $response = $client->request('GET', $url);
             $data = json_decode($response->getBody()->getContents(), true);
@@ -83,6 +86,9 @@ class GoogleMetricsController extends Controller
 
     public function save(Request $request)
     {
+        Log::info('Save metrics request received', [
+            'request_data' => $request->all()
+        ]);
         $performanceValue = $request->input();
         $validated = $request->validate([
             'url'=> 'required|url',
@@ -102,8 +108,10 @@ class GoogleMetricsController extends Controller
             'best_practices_metric' => $validated['best'],
             'strategy_id' => $request->input('strategy_id'),
         ]);
-    
-        // Return success message or any other appropriate response
+        Log::info('Metrics saved successfully', [
+            'url' => $request->input('url'),
+            'strategy_id' => $request->input('strategy_id'),
+        ]);
         return response()->json(['message' => 'Metrics saved successfully.']);    
     }
 

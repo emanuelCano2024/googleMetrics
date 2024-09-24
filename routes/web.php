@@ -21,5 +21,7 @@ Route::post('/metrics/findMetrics', [GoogleMetricsController::class, 'process'])
 Route::post('/metrics/saveMetrics', [GoogleMetricsController::class, 'save'])->name('metrics.save');
 Route::post('/metrics/historyMetrics', [GoogleMetricsController::class, 'history'])->name('metrics.history');
 
-
-
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/logs', [\Spatie\Activitylog\Http\Controllers\LogController::class, 'index'])
+        ->name('logs.index');
+});

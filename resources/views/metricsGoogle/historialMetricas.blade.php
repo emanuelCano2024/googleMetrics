@@ -38,14 +38,14 @@
 <style>
     #metricsTable {
         width: 100%;
-        table-layout: auto; /* Ajusta el ancho de las columnas */
+        table-layout: auto;
     }
 
     #metricsTable th, #metricsTable td {
         text-align: center;
-        white-space: nowrap; /* Evita el salto de línea en las celdas */
-        overflow: hidden; /* Oculta el contenido que se desborda */
-        text-overflow: ellipsis; /* Muestra puntos suspensivos si el texto es demasiado largo */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     #metricsTable tbody tr:hover {
@@ -55,10 +55,18 @@
 
 <script>
 $(document).ready(function() {
-    // Inicializar DataTables
     $('#metricsTable').DataTable({
-        "scrollX": true, // Habilita el desplazamiento horizontal
-        "responsive": true // Hace la tabla responsive
+        "scrollX": true,
+        "responsive": true,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: 'Export xlsx',
+                title: 'Metrics',
+                className: 'btn btn-success'
+            }
+        ]
     });
 });
 </script>
